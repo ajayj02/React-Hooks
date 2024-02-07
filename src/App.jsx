@@ -1,40 +1,30 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 function App() {
-  const [num,setNum] = useState(1);
+  const [counter, setCounter] = useState(0);
+  const [inputValue, setInputValue] = useState(1);
 
-  return <>
-  <button onClick={() => setNum(1)}>1</button>
-  <button onClick={() => setNum(2)}>2</button>
-  <button onClick={() => setNum(3)}>3</button>
-  <button onClick={() => setNum(4)}>4</button>
-  <Todo id={num} />
-  </>
 
-  // return <div>
-  //   {todos.map(todo => <Todo key={todo.id} title={todo.title} description={todo.description} />)}
-  // </div>
-}
-
-function Todo({id}) {
-  const [todo, setTodo] = useState({}) 
-
-  useEffect(() => {
-    fetch("https://sum-server.100xdevs.com/todo?id=" + id)
-      .then(async function(res) {
-        const json = await res.json();
-        setTodo(json.todo);
-      })
-  }, [id])
+  let count = useMemo(() => {
+  console.log("memo got called");
+  let finalCount = 0
+  for (let i = 1; i <= inputValue; i++) {
+    finalCount = finalCount + i;
+  }
+  return finalCount;
+  }, [inputValue] );         // useMemo reduces number of state variables when compared to useEffect
+  
 
   return <div>
-    <h1>
-      {todo.title}
-    </h1>
-    <h4>
-      {todo.description}
-    </h4>
+    <input onChange={function(e) {
+      setInputValue(e.target.value);
+    }} placeholder={"Find sum from 1 to n"}></input>
+    <br />
+    Sum from 1 to {inputValue} is {count}
+    <br />
+    <button onClick={() => {
+      setCounter(counter + 1);
+    }}>Counter ({counter})</button>
   </div>
 }
 
